@@ -1,0 +1,38 @@
+import cv2
+import numpy
+from matplotlib import pyplot as plt
+
+# Creates 2 windows. 1 for unedited video and 1 for edited video
+cv2.namedWindow("Unedited")
+cv2.namedWindow("Edited")
+# grabs the provided video
+vid = cv2.VideoCapture('video.mp4')
+# gets total frames (used to fix a thrown error problem in the while loop)
+totalFrames = int(vid.get(cv2.CAP_PROP_FRAME_COUNT))
+# creates a video writer to putput the video
+# the last parameter is hard coded from the file properties of the origional video
+final = cv2.VideoWriter('final.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 50, (480, 360))
+
+# while loop plays the video
+while(vid.isOpened()):
+    # grabs a single frame
+    ret, frame = vid.read()
+    # converts the frame to grey scale to work nicely with the equalizeHist() function
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    # displays the frame unedited
+    cv2.imshow('Unedited', frame) # displays frame
+    # uses the equalizeHist() function to edit the frame
+    editedFrame = cv2.equalizeHist(frame)
+    # writes the frame to the output videowriter
+    final.write(editedFrame)
+    # displays edited frame
+    cv2.imshow('Edited', editedFrame)
+    # end of video handling
+    totalFrames -= 1
+    if((cv2.waitKey(25) and 0xFF == ord('q')) or (totalFrames == 0)):
+        break
+
+# releases and closes the program
+vid.release()
+final.release()
+cv2.destroyAllWindows()
