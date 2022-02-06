@@ -1,7 +1,3 @@
-# Ryan Sobolewski
-# Assignment 1
-# CAP 4410
-
 import cv2
 
 global editedWin
